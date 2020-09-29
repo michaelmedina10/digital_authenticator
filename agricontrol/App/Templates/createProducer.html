@@ -1,0 +1,103 @@
+{%extends 'app_auth.html'%} //herança 
+{% block title %} {{super()}} - register {%endblock%}
+{%block content%}
+<div class="wrapper d-flex justify-content-center align-items-center p-0 m-0">
+    <div class="row" >
+        <div class="col col-md-auto">
+            <div class="d-flex justify-content-center m-4"> <h1>Cadastro de produtores</h1> </div>
+            
+            <form style="width:30rem" method="POST" action="" enctype="multipart/form-data" novalidate>
+                {{form.csrf_token}}
+                {% if messageBd %}
+                
+                <div class="col-auto p-0 text-center"> 
+                  <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                    </button>
+                     {{ messageBd }}
+                  </div> 
+                </div>
+                {% endif %}
+
+                <div class="col p-0">
+
+                    {% if form.errors.name %}
+                      {% for error in form.errors.name %}
+                        <small id="emailHelp" class="form-text text-muted m-0 p-0"> {{ error }} </small>
+                      {% endfor %}
+                    {% endif %}
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"> <i class="fa fa-2x fa-user"></i> </div>
+                      </div>
+                      {{form.name(class="form-control form-control-lg", id="name", placeholder="Nome")}}
+                    </div>
+
+                </div>
+
+                <div class="col-auto p-0">
+                    {% if form.errors.farming %}
+                      {% for error in form.errors.farming %}
+                            <small id="emailHelp" class="form-text text-muted m-0 p-0"> {{error}} </small>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"> <i style="width:2rem" class="fa fa-2x fa-snowplow"></i> </div>
+                      </div>
+                      {{form.farming(class="form-control form-control-lg", id="farming", placeholder="Cultivo")}}
+                    </div>
+
+                </div>
+
+                <div class="col-auto p-0">
+                  {% if form.errors.annualamount %}
+                    {% for error in form.errors.annualamount %}
+                          <small id="emailHelp" class="form-text text-muted m-0 p-0"> {{error}} </small>
+                      {% endfor %}
+                  {% endif %}
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text"> <i class="fa fa-2x fa-sort-amount-up-alt"></i> </div>
+                    </div>
+                    {{form.annualamount(class="form-control form-control-lg", id="annual", placeholder="quantidade anual")}}
+                  </div>
+
+              </div>
+
+                <div class="col p-0">
+
+                    {% if form.errors.pesticide %}
+                      {% for error in form.errors.pesticide %}
+                        <small id="emailHelp" class="form-text text-muted m-0 p-0"> {{ error }} </small>
+                      {% endfor %}
+                    {% endif %}
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"> <i class="fa fa-2x fa-skull-crossbones"></i> </div>
+                      </div>
+                      {{form.pesticide(class="form-control form-control-lg", id="pesticide", placeholder="Agrotóxico")}}
+                    </div>
+
+                </div>
+
+                <button oncliclick="teste()" type="submit" class="btn btn-block btn-primary">Cadastrar</button>
+
+              </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("name").focus();
+    campos = ['name','farming','annual','pesticide']
+    campos.forEach((campo)=>{
+        document.getElementById(campo).value=""
+    })
+  function teste(){
+    console.log("foi")
+  }
+</script>
+{%endblock%}

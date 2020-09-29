@@ -1,0 +1,64 @@
+comados flask/python
+
+instalar flask 
+
+pip install flask
+----------------------------------
+instalando ambiente virtual
+pip install virtualenv
+---------------------------------
+criando um ambiente virtual 
+virtualenv NomeDoAmbiente
+
+obs: depois de criar o ambiente, você tem que instalar o flask.
+--------------------------------
+acessando o ambiente virtual
+. teste/Scripts/activate
+ou cd nomeDoEnv/Scripts/activate
+agora o cmd vai estar no ambiente virtual.
+--------------------------------
+verificando pacotes instalados
+pip freeze
+--------------------------------
+instalando dependencias em outro computador
+
+primeiro cria o txt com as dependencias com o comando
+
+pip freeze > dependencias.txt
+
+quando estiver em outro pc, a pessoa vai executar o comando 
+
+pip install -r dependencias.txt
+obs: R = read.
+---------------------------------
+algumas dependencias instaladas
+database
+pip install flask-sqlalchemy
+pip install flask-migrate
+pip install flask-script
+pip install mysqlclient - instalar o mysql para python 
+
+depois de instalar o manager voce vai rodar o comando 
+"python run.py runserver" para executar o servidor.
+
+-----------------------------------------------------
+rodando as migrations que pegam a base dos models e manda para o banco de dados
+python run.py db migrate
+porém ainda não vai estar com as tabelas, só vai colocar as tabelas dos models depois
+de rodar o comando "python run.py db upgrade"
+
+TODA VEZ QUE ALTERAR A ESTRUTURA DO BANDO DE DADOS, TEM QUE RODAR ESSES DOIS COMANDOS.
+obs: tabela alembic_version serve para fazer a migração.
+
+avisar que chegou a vacina da raiva pra fazer no rudge até 8:00h 17:00h
+
+$ flask db stamp head
+$ flask db migrate
+$ flask db upgrade
+
+https://forum.rasa.com/t/mysql-tracker-store-gives-error-varchar-requires-a-length-on-dialect-mysql/10486/2
+
+
+    def visit_VARCHAR(self, type_, **kw):
+        if type_.length is None:
+            type_.length = 1050

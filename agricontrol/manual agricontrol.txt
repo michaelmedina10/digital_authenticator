@@ -1,0 +1,19 @@
+git clone https://github.com/j-yoharu/agricontrol.git
+
+-pip install virtualenv
+
+criar o virtual env
+
+- virtualenv ambvirtual
+
+acessar o virtual env
+
+- . ambvirtual/Scripts/activate
+
+- pip install -r requirements.txt
+
+copiar o config.py para o diretorio root
+
+- python run.py runserver
+
+se der erro apagar o cache do navegador

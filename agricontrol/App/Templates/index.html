@@ -1,0 +1,48 @@
+{% extends 'app_auth.html' %}
+
+<!-- método super mantem o que tem no block e adiciona o conteudo adicional -->
+{% block title %} {{ super() }} - Index {% endblock %}
+
+{% block content %}
+<table class="table table-hover table-bordered text-center bg-white">
+    <thead>
+        <tr>
+            <th>Nome</th>
+
+            {% if nivel >=1 %}
+            <th>Cultivo</th>
+            {% endif %}
+
+            {% if nivel >=2 %}
+                <th>qtdAnual</th>
+            {% endif %}
+
+            {% if nivel == 3 %}
+                <th>Agrotóxico</th>
+            {%endif%}
+        </tr>
+    </thead>
+    <tbody>
+        {% for producer in Producers %}
+        <tr>
+            <td>{{ producer.name }}</td>
+
+            {% if nivel >=1 %}
+                <td>{{ producer.farming }}</td>
+            {% endif %}
+
+            {% if nivel >=2 %}
+                <td>{{ producer.annualamount }}</td>
+            {% endif %}
+
+            {% if nivel == 3 %}
+                <td>{{ producer.pesticide }}</td>
+            {%endif%}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+{% endblock %}

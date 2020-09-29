@@ -1,0 +1,173 @@
+{% extends 'app_auth.html' %}
+
+{% block title %} {{super()}} - Usuario {% endblock %}
+
+{% block content %}
+<div class="wrapper d-flex justify-content-center align-items-center p-0 m-0">
+    <div class="row" >
+        <div class="col col-md-auto text-center">
+            <div class="d-flex justify-content-center m-4"> <h1>Detalhes do usuário <br> <span id="userTemplateName"></span></h1> </div>
+
+            <div class="alert alert-success d-none" id="alerta" role="alert">
+                <span id="alertText"></span>
+            </div>
+
+            <form style="width:30rem" method="POST" action="" enctype="multipart/form-data" novalidate>
+                {{form.csrf_token}}
+                {% if messageBd %}
+                
+                <div class="col-auto p-0 text-center"> 
+                  <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      <span class="sr-only">Close</span>
+                    </button>
+                     {{ messageBd }}
+                  </div> 
+                </div>
+                {% endif %}
+
+                <div class="col p-0">
+
+                    {% if form.errors.email %}
+                      {% for error in form.errors.email %}
+                        <small id="emailHelp" class="form-text text-muted m-0 p-0"> {{ error }} </small>
+                      {% endfor %}
+                    {% endif %}
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"> <i class="fa fa-2x fa-at"></i> </div>
+                      </div>
+                      {{form.email(class="form-control form-control-lg", id="email", value=user.email,disabled="true")}}
+                    </div>
+
+                </div>
+
+                <div class="col-auto p-0">
+                    {% if form.errors.username %}
+                      {% for error in form.errors.username %}
+                            <small id="emailHelp" class="form-text text-muted m-0 p-0"> {{error}} </small>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"> <i class="fa fa-2x fa-user"></i> </div>
+                      </div>
+                      {{form.username(class="form-control form-control-lg", id="username", value=user.username,disabled="true")}}
+                    </div>
+
+                </div>
+
+                <div class="col-auto p-0">
+                  {% if form.errors.name %}
+                    {% for error in form.errors.name %}
+                          <small id="emailHelp" class="form-text text-muted m-0 p-0"> {{error}} </small>
+                      {% endfor %}
+                  {% endif %}
+                  <div class="input-group mb-2">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text"> <i class="fa fa-2x fa-user"></i> </div>
+                    </div>
+                    {{form.name(class="form-control form-control-lg", id="name", value=user.name,disabled="true")}}
+                  </div>
+
+              </div>
+
+
+
+                <div class="col p-0">
+
+                    {% if form.errors.nivel %}
+                      {% for error in form.errors.nivel %}
+                        <small id="emailHelp" class="form-text text-muted m-0 p-0"> {{ error }} </small>
+                      {% endfor %}
+                    {% endif %}
+                    <span id="emailHelp" class="form-text text-muted m-0 p-0"> Nível de acesso </span>
+                    <div class="input-group mb-2">
+                      <div class="input-group-prepend">
+                        <div class="input-group-text"> <i class="fa fa-2x fa-user-lock"></i> </div>
+                      </div>
+                      {{form.nivel(class="form-control form-control-lg text-center",id="nivel",disabled="true")}}
+                    </div>
+
+                </div>
+
+                <div class="col-auto p-0 text-center d-flex justify-content-end">
+                    <button onclick="alterar(event)" id="btnAlterar" class="btn btn-primary">Alterar</button>
+                    <button onclick="excluir(event)" id="btnExcluir" class="btn btn-danger ml-4">Excluir</button>
+                </div>
+
+
+              </form>
+        </div>
+    </div>
+</div>
+<script>
+    var id = {{user.id}}
+    username = document.getElementById("username").value;
+    document.getElementById("userTemplateName").innerText = username;
+    var campos = ['name','username','email','nivel'];
+    document.getElementById("nivel").value={{user.nivelAcesso}}
+    
+    function alterar(event){
+        event.preventDefault()
+        var btnAlterar = $("#btnAlterar")
+
+        btnAlterar.toggleClass("btn-primary")
+
+        if(!btnAlterar.hasClass("btn-primary")){
+            btnAlterar.addClass("btn-success")
+            btnAlterar.text("Salvar")
+            campos.forEach((campo)=>{
+                document.getElementById(campo).removeAttribute("disabled")
+            })
+            return true
+        }
+        btnAlterar.removeClass("btn-success")
+        btnAlterar.text("Alterar")
+        campos.forEach((campo)=>{
+            document.getElementById(campo).setAttribute("disabled","true")
+        })
+        let data = []
+        campos.forEach((campo)=>{
+                data.push(document.getElementById(campo).value)
+        })
+        axios.post("http://127.0.0.1:5000/updateuser",{id:id,nome:data[0],username:data[1],email:data[2],nivel:data[3]}).then((resp)=>{
+            alerta("editado com sucesso")
+            document.getElementById("userTemplateName").innerText = document.getElementById("username").value;
+
+        })
+        return false
+    }
+    function excluir(event){
+        event.preventDefault()
+
+        if($("#btnExcluir").hasClass("btn-success")){
+            window.location.href = "/users";
+        }
+        if($("#btnExcluir").hasClass("btn-danger")){
+            if(confirm("Tem certeza que deseja excluir esse usuário?")){
+            axios.post("http://127.0.0.1:5000/deleteuser",{"id":id}).then((resp)=>{
+            alerta("Excluido o usuário com sucesso!")
+                campos.forEach((campo)=>{
+                document.getElementById(campo).value="";
+                })
+                $("#btnExcluir").text("Voltar")
+                $("#btnExcluir").removeClass("btn-danger")
+                $("#btnExcluir").addClass("btn-success")
+        })
+        }
+        }
+  
+
+        
+    }
+    function alerta(text){
+        $("#alerta").removeClass("d-none")
+        $("#alertText").text(text)
+        setTimeout(()=>{
+            $("#alerta").addClass("d-none")
+        },2000)
+    }
+</script>
+{% endblock %}
